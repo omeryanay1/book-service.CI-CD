@@ -1,0 +1,68 @@
+name: assignment3
+
+on:
+  push:
+    branches:
+      - main  # Specifies that the workflow should run on pushes to the main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build Docker image
+        run: |
+          docker build -t books-service .
+      - name: Save Docker image
+        run: |
+          docker save books-service | gzip > books-service.tar.gz
+      - uses: actions/upload-artifact@v2
+        with:
+          name: docker-image
+          path: books-service.tar.gz
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v2
+        with:
+          name: docker-image
+          path: .
+      - name: Load Docker image
+        run: |
+          gunzip -c books-service.tar.gz | docker load
+      - name: Run MongoDB container
+        run: docker run --name mongodb -d mongo
+      - name: Run Books Service container
+        run: |
+          docker run --name books-service --link mongodb:mongo -d books-service
+      - name: Run tests
+        run: pytest -v tests/
+
+  query:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v2
+        with:
+          name: docker-image
+          path: .
+      - name: Load Docker image
+        run: |
+          gunzip -c books-service.tar.gz | docker load
+      - name: Run MongoDB container
+        run: docker run --name mongodb -d mongo
+      - name: Run Books Service container
+        run: |
+          docker run --name books-service --link mongodb:mongo -d books-service
+      - name: Execute Queries and Save Responses
+        run: |
+          # Example script to execute queries and save responses
+          echo "Performing queries and saving results..."
+      - uses: actions/upload-artifact@v2
+        with:
+          name: query-results
+          path: response.txt
