@@ -66,19 +66,16 @@ jobs:
         run: |
           docker run --name books-service --link mongodb:mongo -p 5001:5001 -d books-service
 
-      - name: Run tests
-        run: |
-          docker exec books-service pytest /tests/assn3_test.py
+    - name: Run tests
+      run: |
+        docker exec books-service pytest -v tests/assn3_tests.py > assn3_test_results.txt
 
-      - name: Collect test results
-        run: |
-          docker cp books-service:/tests/assn3_test.py/test-results.xml test-results.xml
-
-      - name: Upload test results
-        uses: actions/upload-artifact@v2
-        with:
-          name: test-results
-          path: test-results.xml
+    - name: Upload test results
+      if: always()  # This ensures that the test results are uploaded regardless of test success or failure
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-results
+        path: assn3_test_results.txt
 
   query:
     needs: test
