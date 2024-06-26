@@ -11,48 +11,33 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    outputs:
-      build-status: ${{ steps.build-image.outcome }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Create start time log
-        run: echo "Start Time:$(date -Iminutes)" > log.txt
-
       - name: Build Docker image
-        id: build-image
         run: |
           docker build -t books-service .
-          echo "Image successfully built" >> log.txt
-
-      - name: Handle build failure
-        if: failure()
-        run: echo "Image not able to be built" >> log.txt
+          echo "Docker Image Built Successfully"
 
       - name: Save Docker image
         run: |
           docker save books-service | gzip > books-service.tar.gz
 
-      - name: Upload Docker image and log
+      - name: Upload Docker image
         uses: actions/upload-artifact@v2
         with:
-          name: build-artifacts
-          path: |
-            books-service.tar.gz
-            log.txt
+          name: docker-image
+          path: books-service.tar.gz
 
   test:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
       - name: Download Docker image
         uses: actions/download-artifact@v2
         with:
-          name: build-artifacts
+          name: docker-image
 
       - name: Load Docker image
         run: |
@@ -66,17 +51,24 @@ jobs:
         run: |
           docker run --name books-service --link mongodb:mongo -p 5001:5001 -d books-service
 
-    - name: Run tests
-      run: |
-        docker exec books-service pytest -v tests/assn3_tests.py > assn3_test_results.txt
+      - name: Set up Python environment
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
 
-    - name: Upload test results
-      if: always()  # This ensures that the test results are uploaded regardless of test success or failure
-      uses: actions/upload-artifact@v2
-      with:
-        name: test-results
-        path: assn3_test_results.txt
+      - name: Install dependencies
+        run: |
+          pip install pytest
 
+      - name: Run tests
+        run: |
+          docker exec books-service pytest tests/assn3_tests.py -v > assn3_test_results.txt
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: assn3_test_results.txt
 
   query:
     needs: test
@@ -85,28 +77,29 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Download build artifacts and log
+      - name: Download Docker image and test results
         uses: actions/download-artifact@v2
         with:
-          name: build-artifacts
+          name: test-results
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.8'
-
-      - name: Install Python dependencies
+      - name: Load Docker image
         run: |
-          pip install requests
+          gunzip -c books-service.tar.gz | docker load
+
+      - name: Start MongoDB container
+        run: |
+          docker run --name mongodb -d mongo
+
+      - name: Start Books Service container
+        run: |
+          docker run --name books-service --link mongodb:mongo -p 5001:5001 -d books-service
 
       - name: Run query processor
         run: |
           python scripts/process_queries.py
 
-      - name: Upload query results and final log
+      - name: Upload query results
         uses: actions/upload-artifact@v2
         with:
           name: final-results
-          path: |
-            response.txt
-            log.txt
+          path: response.txt
