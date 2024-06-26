@@ -68,11 +68,11 @@ jobs:
 
       - name: Run tests
         run: |
-          docker exec books-service pytest /path/to/tests
+          docker exec books-service pytest /tests/assn3_test.py
 
       - name: Collect test results
         run: |
-          docker cp books-service:/path/to/tests/test-results.xml test-results.xml
+          docker cp books-service:/tests/assn3_test.py/test-results.xml test-results.xml
 
       - name: Upload test results
         uses: actions/upload-artifact@v2
