@@ -1,3 +1,13 @@
+name: Books Service CI/CD Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,6 +41,44 @@ jobs:
           path: |
             books-service.tar.gz
             log.txt
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download Docker image
+        uses: actions/download-artifact@v2
+        with:
+          name: build-artifacts
+
+      - name: Load Docker image
+        run: |
+          gunzip -c books-service.tar.gz | docker load
+
+      - name: Start MongoDB container
+        run: |
+          docker run --name mongodb -d mongo
+
+      - name: Start Books Service container
+        run: |
+          docker run --name books-service --link mongodb:mongo -p 5001:5001 -d books-service
+
+      - name: Run tests
+        run: |
+          docker exec books-service pytest /path/to/tests
+
+      - name: Collect test results
+        run: |
+          docker cp books-service:/path/to/tests/test-results.xml test-results.xml
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: test-results.xml
 
   query:
     needs: test
