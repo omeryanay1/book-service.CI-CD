@@ -87,7 +87,7 @@ jobs:
 
       - name: Run tests
         run: |
-          if pytest -v /tests/assn3_tests.py > assn3_test_results.txt; then
+          if pytest -v tests/assn3_tests.py > assn3_test_results.txt; then
             echo "Tests succeeded" >> log.txt
           else
             echo "Tests failed" >> log.txt
