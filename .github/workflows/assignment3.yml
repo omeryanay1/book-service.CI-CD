@@ -13,29 +13,42 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+
+      - name: Record start time
+        run: echo "Start Time: $(date -Iminutes)" > log.txt
 
       - name: Build Docker image
         run: |
-          docker build -t books-service .
-          echo "Docker Image Built Successfully"
+          if docker build -t books-service .; then
+            echo "Image successfully built" >> log.txt
+          else
+            echo "Image not able to be built" >> log.txt
+            exit 1
+          fi
 
       - name: Save Docker image
         run: |
           docker save books-service | gzip > books-service.tar.gz
 
-      - name: Upload Docker image
-        uses: actions/upload-artifact@v2
+      - name: Upload Docker image and log
+        uses: actions/upload-artifact@v3
         with:
           name: docker-image
           path: books-service.tar.gz
+
+      - name: Upload log
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-log
+          path: log.txt
 
   test:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Download Docker image
-        uses: actions/download-artifact@v2
+      - name: Download Docker image and log
+        uses: actions/download-artifact@v3
         with:
           name: docker-image
 
@@ -45,30 +58,38 @@ jobs:
 
       - name: Start MongoDB container
         run: |
-          docker run --name mongodb -d mongo
+          if docker run --name mongodb -d mongo; then
+            echo "MongoDB container up and running" >> log.txt
+          else
+            echo "MongoDB container failed to run" >> log.txt
+            exit 1
+          fi
 
       - name: Start Books Service container
         run: |
-          docker run --name books-service --link mongodb:mongo -p 5001:5001 -d books-service
-
-      - name: Set up Python environment
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.8'
-
-      - name: Install dependencies
-        run: |
-          pip install pytest
+          if docker run --name books-service --link mongodb:mongo -p 5001:5001 -d books-service; then
+            echo "Books Service container up and running" >> log.txt
+          else
+            echo "Books Service container failed to run" >> log.txt
+            exit 1
+          fi
 
       - name: Run tests
         run: |
-          docker exec books-service pytest tests/assn3_tests.py -v > assn3_test_results.txt
+          if pytest /tests/assn3_tests.py -v > assn3_test_results.txt; then
+            echo "Tests succeeded" >> log.txt
+          else
+            echo "Tests failed" >> log.txt
+            exit 1
+          fi
 
-      - name: Upload test results
+      - name: Upload test results and log
         uses: actions/upload-artifact@v2
         with:
-          name: test-results
-          path: assn3_test_results.txt
+          name: test-results-and-log
+          path: |
+            assn3_test_results.txt
+            log.txt
 
   query:
     needs: test
@@ -80,7 +101,7 @@ jobs:
       - name: Download Docker image and test results
         uses: actions/download-artifact@v2
         with:
-          name: test-results
+          name: test-results-and-log
 
       - name: Load Docker image
         run: |
@@ -98,8 +119,10 @@ jobs:
         run: |
           python scripts/process_queries.py
 
-      - name: Upload query results
+      - name: Upload query results and log
         uses: actions/upload-artifact@v2
         with:
-          name: final-results
-          path: response.txt
+          name: final-results-and-log
+          path: |
+            response.txt
+            log.txt
