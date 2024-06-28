@@ -75,6 +75,7 @@ jobs:
         run: pytest -v ./tests/assn3_tests.py > assn3_test_results.txt
 
       - name: Upload test results and log
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: test-results-and-log
