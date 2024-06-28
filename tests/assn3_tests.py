@@ -16,7 +16,7 @@ ids = []
 
 @pytest.mark.parametrize("book", books[:3])
 def test_post_books_unique_ids(book):
-    response = requests.post(f"{BASE_URL}/books", json=book)
+    response = requests.post(f"{BASE_URL}/books", json=book, headers={"Content-Type": "application/json"})
     assert response.status_code == 201
     ids.append(response.json()['ID'])
     assert len(set(ids)) == len(ids), "IDs are not unique"
