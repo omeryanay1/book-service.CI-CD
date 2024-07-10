@@ -2,7 +2,7 @@
 import requests
 import json
 
-URL = "http://localhost:5001"  # Base URL for the book service
+URL = "http://0.0.0.0:5001"  # Base URL for the book service
 
 def http_get(resource: str):
     response = requests.get(url=f"{URL}/{resource}", headers={"Content-Type": "application/json"})
