@@ -19,8 +19,7 @@ ids = []
 # Test 1: Post books and check for unique IDs and correct status code
 @pytest.mark.parametrize("book", books[:3])
 def test_post_books_unique_ids(book):
-    response = requests.post("http://localhost:5001/books", headers={"Content-Type": "application/json"}, json = book)
-    #response = connectionController.http_post("books", book)
+    response = connectionController.http_post("books", book)
     assert_status_code(response, 201)
     book_id = response.json().get('ID')
     assert book_id not in ids, "Duplicate ID found"
