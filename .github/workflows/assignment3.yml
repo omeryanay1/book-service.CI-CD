@@ -20,7 +20,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker-compose -f docker-compose.yml build
+          docker-compose -f ./docker-compose.yml build
           echo "Images successfully built" >> log.txt
 
       - name: Save Docker image
