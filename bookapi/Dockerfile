@@ -1,6 +1,6 @@
 FROM python:3.12.2-slim as base
 WORKDIR ./app
-COPY ../requirements.txt .
+COPY book-service.CI-CD/requirements.txt .
 COPY main.py .
 COPY BooksCollection.py .
 COPY RatingsCollection.py .
