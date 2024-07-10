@@ -1,0 +1,25 @@
+version: '3'
+services:
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    restart: always
+    networks:
+      - backend
+
+  bookapi:
+    build: ./bookapi
+    depends_on:
+      - mongo
+    ports:
+      - "5001:8000"
+    expose:
+      - 8000
+    restart: always
+    networks:
+      - backend
+      
+networks:
+  backend:
+    driver: bridge

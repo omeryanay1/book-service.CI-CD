@@ -20,17 +20,17 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t books-service .
-          echo "Image successfully built" >> log.txt
+          docker-compose -f docker-compose.yml build
+          echo "Images successfully built" >> log.txt
 
       - name: Save Docker image
-        run: docker save books-service | gzip > books-service.tar.gz
+        run: docker save bookapi | gzip > bookapi.tar.gz
 
       - name: Upload Docker image and log
         uses: actions/upload-artifact@v3
         with:
           name: docker-image
-          path: books-service.tar.gz
+          path: bookapi.tar.gz
 
       - name: Upload log
         uses: actions/upload-artifact@v3
@@ -48,16 +48,13 @@ jobs:
           name: docker-image
 
       - name: Load Docker image
-        run: gunzip -c books-service.tar.gz | docker load
+        run: gunzip -c bookapi.tar.gz | docker load
 
-      - name: Create network
-        run: docker network create my-net
+      - name: Set up Docker Compose
+        run: docker-compose -f docker-compose.yml up -d
 
-      - name: Start MongoDB container
-        run: docker run --name mongodb --network my-net -d mongo
-
-      - name: Start Books Service container
-        run: docker run --name books-service --network my-net -p 5001:5001 -d books-service
+      - name: Check container status
+        run: docker-compose -f docker-compose.yml ps
 
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -83,6 +80,9 @@ jobs:
             assn3_test_results.txt
             log.txt
 
+      - name: Tear down Docker Compose
+        run: docker-compose -f docker-compose.yml down
+
   query:
     needs: test
     runs-on: ubuntu-latest
@@ -96,13 +96,10 @@ jobs:
           name: test-results-and-log
 
       - name: Load Docker image
-        run: gunzip -c books-service.tar.gz | docker load
+        run: gunzip -c bookapi.tar.gz | docker load
 
-      - name: Start MongoDB container
-        run: docker run --name mongodb --network my-net -d mongo
-
-      - name: Start Books Service container
-        run: docker run --name books-service --network my-net -p 5001:5001 -d books-service
+      - name: Set up Docker Compose
+        run: docker-compose -f docker-compose.yml up -d
 
       - name: Run query processor
         run: python scripts/process_queries.py
@@ -114,3 +111,6 @@ jobs:
           path: |
             response.txt
             log.txt
+
+      - name: Tear down Docker Compose
+        run: docker-compose -f docker-compose.yml down
