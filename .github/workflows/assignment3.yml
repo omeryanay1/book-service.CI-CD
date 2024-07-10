@@ -58,7 +58,7 @@ jobs:
         run: docker-compose -f docker-compose.yml up -d
 
       - name: Check container status
-        run: docker-compose -f docker-compose.yml ps
+        run: docker ps
 
       - name: Set up Python
         uses: actions/setup-python@v4
