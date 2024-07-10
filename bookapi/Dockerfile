@@ -4,7 +4,7 @@ COPY main.py .
 COPY BooksCollection.py .
 COPY RatingsCollection.py .
 RUN --mount=type=cache,target=/root/.cache/pip \
-    --mount=type=bind,source=requirements.txt,target=requirements.txt \
+    --mount=type=bind,source=requirements.txt,target=../requirements.txt \
     python -m pip install -r requirements.txt
 EXPOSE 5001 
 CMD ["python3", "main.py"]
