@@ -13,5 +13,5 @@ def http_delete(resource: str):
     return response
 
 def http_post(resource: str, data: {}):
-    response = requests.post(url=f'{URL}/{resource}', headers={"Content-Type": "application/json"}, data=json.dumps(data))
+    response = requests.post(url=f"{URL}/{resource}", headers={"Content-Type": "application/json"}, data=json.dumps(data))
     return response
