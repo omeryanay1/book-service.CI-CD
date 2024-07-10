@@ -18,19 +18,22 @@ jobs:
       - name: Record start time
         run: echo "Start Time:$(date -Iminutes)" > log.txt
 
-      - name: Build Docker image
-        run: |
-          docker-compose -f ./docker-compose.yml build
-          echo "Images successfully built" >> log.txt
-
-      - name: Save Docker image
-        run: docker save bookapi | gzip > bookapi.tar.gz
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        
+      - name: Build and export
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ./bookapi/Dockerfile
+          tags: books:latest
+          outputs: type=docker,dest=/tmp/image.tar
 
       - name: Upload Docker image and log
         uses: actions/upload-artifact@v3
         with:
-          name: docker-image
-          path: bookapi.tar.gz
+          name: books
+          path: /tmp/image.tar
 
       - name: Upload log
         uses: actions/upload-artifact@v3
