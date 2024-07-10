@@ -9,7 +9,7 @@ services:
       - backend
 
   bookapi:
-    build: ./bookapi
+    image: books
     depends_on:
       - mongo
     ports:
