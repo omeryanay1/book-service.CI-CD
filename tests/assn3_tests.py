@@ -1,5 +1,7 @@
 import pytest
 import connectionController
+import requests
+import json
 #from connectionController import http_post, http_get, http_delete
 from assertions import assert_status_code, assert_field
 
@@ -12,12 +14,15 @@ books = [
     {"title": "The Greatest Joke Book Ever", "authors": "Mel Greene", "ISBN": "9780380798490", "genre": "Jokes"}
 ]
 
+URL = "http://127.0.0.1:5001"
+
 ids = []
 
 # Test 1: Post books and check for unique IDs and correct status code
 @pytest.mark.parametrize("book", books[:3])
 def test_post_books_unique_ids(book):
-    response = connectionController.http_post("books", book)
+    response = requests.post(url=f"{URL}/books", headers={"Content-Type": "application/json"}, data=json.dumps(books))
+    #response = connectionController.http_post("books", book)
     assert_status_code(response, 201)
     book_id = response.json().get('ID')
     assert book_id not in ids, "Duplicate ID found"
