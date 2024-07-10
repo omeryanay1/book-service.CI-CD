@@ -51,14 +51,14 @@ jobs:
       - name: Load Docker image
         run: docker load --input books/image.tar
 
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Set up Docker Compose
         run: docker-compose -f docker-compose.yml up -d
 
       - name: Check container status
         run: docker-compose -f docker-compose.yml ps
-
-      - name: Checkout repository
-        uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v4
