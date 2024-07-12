@@ -21,14 +21,7 @@ ids = []
 def test_post_books_unique_ids(book):
     response = connectionController.http_post("books", book)
     assert_status_code(response, 201)
-        # Check if response content is JSON
-    try:
-        response_json = response.json()
-    except json.JSONDecodeError:
-        pytest.fail(f"Response is not JSON: {response.text}")
-    
-    # Get book ID and ensure it's unique
-    book_id = response_json.get('ID')
+    book_id = response.json['id']
     assert book_id not in ids, "Duplicate ID found"
     ids.append(book_id)
 
