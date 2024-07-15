@@ -42,7 +42,7 @@ jobs:
       - name: Upload log
         uses: actions/upload-artifact@v3
         with:
-          name: log.txt
+          name: log
           path: log.txt
 
   test:
@@ -55,7 +55,8 @@ jobs:
       - name: Download log
         uses: actions/download-artifact@v3
         with:
-          name: log.txt  
+          name: log
+          path: log.txt
         
       - name: Load Docker image
         run: docker load --input books/image.tar
