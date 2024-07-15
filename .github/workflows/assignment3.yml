@@ -112,12 +112,12 @@ jobs:
           book6='{"title":"The Adventures of Tom Sawyer", "ISBN":"9780195810400", "genre":"Fiction"}'
           book7='{"title":"I, Robot", "ISBN":"9780553294385", "genre":"Science Fiction"}'
           book8='{"title":"Second Foundation", "ISBN":"9780553293364", "genre":"Science Fiction"}'
-          curl -L -X POST -m 10 -H "Content-Type: application/json" -d "$book1" http://127.0.0.1:5001/books
-          curl -L -X POST -m 10 -H "Content-Type: application/json" -d "$book2" http://127.0.0.1:5001/books
-          curl -L -X POST -m 10 -H "Content-Type: application/json" -d "$book3" http://127.0.0.1:5001/books
-          curl -L -X POST -m 10 -H "Content-Type: application/json" -d "$book6" http://127.0.0.1:5001/books
-          curl -L -X POST -m 10 -H "Content-Type: application/json" -d "$book7" http://127.0.0.1:5001/books
-          curl -L -X POST -m 10 -H "Content-Type: application/json" -d "$book8" http://127.0.0.1:5001/books
+          curl -L -X POST -m 10 -H "Content-Type: application/json" -d "$book1" http://127.0.0.1:5001/books >> text.txt
+          curl -L -X POST -m 10 -H "Content-Type: application/json" -d "$book2" http://127.0.0.1:5001/books >> text.txt
+          curl -L -X POST -m 10 -H "Content-Type: application/json" -d "$book3" http://127.0.0.1:5001/books >> text.txt
+          curl -L -X POST -m 10 -H "Content-Type: application/json" -d "$book6" http://127.0.0.1:5001/books >> text.txt
+          curl -L -X POST -m 10 -H "Content-Type: application/json" -d "$book7" http://127.0.0.1:5001/books >> text.txt
+          curl -L -X POST -m 10 -H "Content-Type: application/json" -d "$book8" http://127.0.0.1:5001/books >> text.txt
 
       - name: Run query script
         run: python scripts/process_queries.py
