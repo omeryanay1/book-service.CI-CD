@@ -106,7 +106,6 @@ jobs:
 
       - name: Curl POST requests
         run: |
-          curl http://127.0.0.1:5001/books
           curl -L -X POST -m 10 -H "Content-Type: application/json" -d '{"title":"Adventures of Huckleberry Finn", "ISBN":"9780520343641", "genre":"Fiction"}' http://127.0.0.1:5001/books
           curl -L -X POST -m 10 -H "Content-Type: application/json" -d '{"title":"The Best of Isaac Asimov", "ISBN":"9780385050784", "genre":"Science Fiction"}' http://127.0.0.1:5001/books
           curl -L -X POST -m 10 -H "Content-Type: application/json" -d '{"title":"Fear No Evil", "ISBN":"9780394558783", "genre":"Biography"}' http://127.0.0.1:5001/books
