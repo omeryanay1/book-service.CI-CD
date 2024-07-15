@@ -63,12 +63,6 @@ jobs:
       - name: Load Docker image
         run: docker load --input books/image.tar
 
-      - name: Download log
-        uses: actions/download-artifact@v3
-        with:
-          name: log
-          path: .  
-
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -76,9 +70,9 @@ jobs:
         run: |
           docker compose -f docker-compose.yml up -d
           if [ $? -eq 0 ]; then
-            echo "Container up and running" >> log.txt
+            echo "Container up and running" >> log.txt/log
           else
-            echo "Container failed to run" >> log.txt
+            echo "Container failed to run" >> log.txt/log
             exit 1
           fi
 
@@ -99,9 +93,9 @@ jobs:
         run: |
           pytest -v ./tests/assn3_tests.py > assn3_test_results.txt
           if [ $? -eq 0 ]; then
-            echo "tests succeeded" >> log.txt
+            echo "tests succeeded" >> log.txt/log
           else
-            echo "tests failed" >> log.txt
+            echo "tests failed" >> log.txt/log
             exit 1
           fi
 
