@@ -100,14 +100,7 @@ jobs:
         with:
           name: pytest-results
           path: |
-            assn3_test_results.txt
-
-      - name: Upload artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: log
-          path: log.txt      
+            assn3_test_results.txt  
             
       - name: Tear down Docker Compose
         run: docker-compose -f docker-compose.yml down
