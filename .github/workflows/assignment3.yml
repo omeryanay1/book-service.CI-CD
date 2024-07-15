@@ -31,7 +31,6 @@ jobs:
           file: ./bookapi/Dockerfile
           tags: books:latest
           outputs: type=docker,dest=/tmp/image.tar
-
  
 
       - name: Upload Docker image and log
@@ -50,17 +49,9 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Download Docker image
+      - name: Download Docker image and log
         uses: actions/download-artifact@v3
-        with:
-          name: books
-
-      - name: Download log
-        uses: actions/download-artifact@v3
-        with:
-          name: log.txt
-          path: log.txt
-
+        
       - name: Load Docker image
         run: docker load --input books/image.tar
 
