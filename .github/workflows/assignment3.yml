@@ -62,9 +62,9 @@ jobs:
         run: |
           docker compose -f docker-compose.yml up -d
           if [ $? -eq 0 ]; then
-            echo "Container up and running" >> log/log.txt
+            echo "Container up and running" >> log.txt
           else
-            echo "Container failed to run" >> log/log.txt
+            echo "Container failed to run" >> log.txt
             exit 1
           fi
 
@@ -85,9 +85,9 @@ jobs:
         run: |
           pytest -v ./tests/assn3_tests.py > assn3_test_results.txt
           if [ $? -eq 0 ]; then
-            echo "tests succeeded" >> log/log.txt
+            echo "tests succeeded" >> log.txt
           else
-            echo "tests failed" >> log/log.txt
+            echo "tests failed" >> log.txt
             exit 1
           fi
 
@@ -103,8 +103,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: log file
-          path: log/log.txt      
+          name: log
+          path: log.txt      
             
       - name: Tear down Docker Compose
         run: docker-compose -f docker-compose.yml down
