@@ -52,8 +52,8 @@ jobs:
       - name: Download Docker image and log
         uses: actions/download-artifact@v3
 
-      - name: Extract log
-        run: mv log/log.txt log.txt  
+      - name: Move log to current directory
+        run: mv log/log.txt log.txt
 
       - name: Load Docker image
         run: docker load --input books/image.tar
