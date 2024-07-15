@@ -59,6 +59,13 @@ jobs:
     steps:
       - name: Download Docker image and log
         uses: actions/download-artifact@v3
+        with:
+          name: books
+
+      - name: Download log
+        uses: actions/download-artifact@v3
+        with:
+          name: log.txt
         
       - name: Load Docker image
         run: docker load --input books/image.tar
