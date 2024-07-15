@@ -52,12 +52,6 @@ jobs:
       - name: Download Docker image and log
         uses: actions/download-artifact@v3
 
-      - name: Download log
-        uses: actions/download-artifact@v3
-        with:
-          name: log
-          path: log.txt
-        
       - name: Load Docker image
         run: docker load --input books/image.tar
 
@@ -68,9 +62,9 @@ jobs:
         run: |
           docker compose -f docker-compose.yml up -d
           if [ $? -eq 0 ]; then
-            echo "Container up and running" >> log.txt
+            echo "Container up and running" >> log/log.txt
           else
-            echo "Container failed to run" >> log.txt
+            echo "Container failed to run" >> log/log.txt
             exit 1
           fi
 
@@ -91,21 +85,27 @@ jobs:
         run: |
           pytest -v ./tests/assn3_tests.py > assn3_test_results.txt
           if [ $? -eq 0 ]; then
-            echo "tests succeeded" >> log.txt
+            echo "tests succeeded" >> log/log.txt
           else
-            echo "tests failed" >> log.txt
+            echo "tests failed" >> log/log.txt
             exit 1
           fi
 
-      - name: Upload test results and log
+      - name: Upload test results 
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: pytest-results
           path: |
             assn3_test_results.txt
-            log.txt
 
+      - name: Upload artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Log file
+          path: Log/log.txt      
+            
       - name: Tear down Docker Compose
         run: docker-compose -f docker-compose.yml down
 
