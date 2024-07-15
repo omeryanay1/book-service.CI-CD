@@ -15,7 +15,7 @@ services:
     ports:
       - "5001:5001"
     expose:
-      - 8000
+      - 5001
     restart: always
     networks:
       - backend
