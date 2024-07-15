@@ -59,9 +59,9 @@ jobs:
       - name: Download log
         uses: actions/download-artifact@v3
         with:
-          name: log
+          name: log.txt
           path: log.txt
-          
+
       - name: Load Docker image
         run: docker load --input books/image.tar
 
