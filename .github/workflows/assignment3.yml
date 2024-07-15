@@ -77,7 +77,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: test-results-and-log
+          name: pytest-results
           path: |
             assn3_test_results.txt
             log.txt
@@ -126,6 +126,7 @@ jobs:
       - name: Upload query results and log
         uses: actions/upload-artifact@v3
         with:
+          name: query-response
           path: |
             response.txt
             log.txt
