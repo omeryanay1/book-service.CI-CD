@@ -13,9 +13,9 @@ def process_queries():
             response = requests.get(f"{BASE_URL}{query}")
             if response.ok:
                 json_response = response.json()
-                file.write(f"query: qs-{i}\nresponse: {json_response}\n")
+                file.write(f"query: {query}\nresponse: {json_response}\n")
             else:
-                file.write(f"query: qs-{i}\nerror: {response.status_code}\n")
+                file.write(f"query: {query}\nerror: {response.status_code}\n")
 
 if __name__ == "__main__":
     process_queries()
