@@ -92,7 +92,7 @@ class BookId(Resource):
     def get(self,book_id):
         success, book = bookCol.findBook(book_id)
         if success:
-            return {"ID": book_id}, 200
+            return book, 200
         else:
             return 0, 404
     
