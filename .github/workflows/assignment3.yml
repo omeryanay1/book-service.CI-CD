@@ -49,11 +49,17 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Download Docker image and log
+       - name: Download log
         uses: actions/download-artifact@v3
+        with:
+          name: log
+          path: .
 
-      - name: Extract log
-        run: mv log/log.txt log.txt  
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: books
+          path: .
 
       - name: Load Docker image
         run: docker load --input books/image.tar
