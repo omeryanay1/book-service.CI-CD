@@ -54,7 +54,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: books
-          path: books/image.tar
 
       - name: Download log
         uses: actions/download-artifact@v3
