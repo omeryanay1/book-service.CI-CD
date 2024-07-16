@@ -108,21 +108,22 @@ jobs:
 
       - name: Upload test results 
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: pytest-results
           path: |
             assn3_test_results.txt  
+
+      - name: Upload log file
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: log
+          path: /tmp/log.txt
+          overwrite: true
             
       - name: Tear down Docker Compose
         run: docker-compose -f docker-compose.yml down
-
-      - name: Upload log with overwrite
-        uses: actions/upload-artifact@v3
-        with:
-          name: log
-          path: tmp/log.txt
-          overwrite: true
 
   query:
     needs: test
