@@ -61,16 +61,13 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: log
-          path: log.txt
+          path: log.txt  
 
       - name: Download Docker image and log
-        uses: actions/download-artifact@v3
-        with:
-          name: books
-          path: /tmp/image.tar
+        uses: actions/download-artifact@v3    
 
       - name: Load Docker image
-        run: docker load --input books
+        run: docker load --input books/image.tar
 
       - name: Checkout repository
         uses: actions/checkout@v3
