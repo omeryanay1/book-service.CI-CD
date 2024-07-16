@@ -76,10 +76,10 @@ jobs:
         run: |
           docker compose -f docker-compose.yml up -d
           if [ $? -eq 0 ]; then
-            echo "Container up and running" >> log.txt
+            echo "Container up and running" >> log/log.txt
           else
-            echo "Container failed to run" >> log.txt
-            exit 1
+            echo "Container failed to run" >> log/log.txt
+            exit 1s
           fi
 
       - name: Check container status
@@ -99,9 +99,9 @@ jobs:
         run: |
           pytest -v ./tests/assn3_tests.py > assn3_test_results.txt
           if [ $? -eq 0 ]; then
-            echo "tests succeeded" >> log.txt
+            echo "tests succeeded" >> log/log.txt
           else
-            echo "tests failed" >> log.txt
+            echo "tests failed" >> log/log.txt
             exit 1
           fi
 
