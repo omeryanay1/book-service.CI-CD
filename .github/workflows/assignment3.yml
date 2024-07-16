@@ -62,10 +62,10 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: log
-          path: log.txt 
+          path: ./ 
 
       - name: Copy build log to new log
-        run: cat log/log.txt > new_log.txt     
+        run: cat log.txt > new_log.txt     
 
       - name: Download Docker image and log
         uses: actions/download-artifact@v3    
