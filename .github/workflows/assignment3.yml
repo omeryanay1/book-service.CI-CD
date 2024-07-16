@@ -58,15 +58,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - name: Download log from build
-        uses: actions/download-artifact@v3
-        with:
-          name: log
-          path: ./ 
-
-      - name: Copy build log to new log
-        run: cat log.txt > new_log.txt     
-
       - name: Download Docker image and log
         uses: actions/download-artifact@v3    
 
@@ -80,9 +71,9 @@ jobs:
         run: |
           docker compose -f docker-compose.yml up -d
           if [ $? -eq 0 ]; then
-            echo "Container up and running" >> new_log.txt
+            echo "Container up and running" >> ./log.txt
           else
-            echo "Container failed to run" >> new_log.txt
+            echo "Container failed to run" >> ./log.txt
             exit 1s
           fi
 
@@ -103,9 +94,9 @@ jobs:
         run: |
           pytest -v ./tests/assn3_tests.py > assn3_test_results.txt
           if [ $? -eq 0 ]; then
-            echo "tests succeeded" >> new_log.txt
+            echo "tests succeeded" >> ./log.txt
           else
-            echo "tests failed" >> new_log.txt
+            echo "tests failed" >> ./log.txt
             exit 1
           fi
 
@@ -124,7 +115,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: log
-          path: new_log.txt
+          path: log.txt
           overwrite: true
 
   query:
