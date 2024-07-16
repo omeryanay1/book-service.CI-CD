@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Record start time
         run: echo "Start Time:$(date -Iminutes)" > log.txt
@@ -22,10 +22,10 @@ jobs:
         run: echo "Omer Yanay, Yuval Lapid" >> log.txt  
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
         
       - name: Build and export
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: ./bookapi
           file: ./bookapi/Dockerfile
@@ -42,16 +42,16 @@ jobs:
           fi     
  
       - name: Upload Docker image and log
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: books
           path: /tmp/image.tar
 
       - name: Upload log
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: log
-          path: log.txt
+          path: /tmp/log.txt
 
   test:
     needs: build
@@ -59,13 +59,19 @@ jobs:
     steps:
 
       - name: Download Docker image and log
-        uses: actions/download-artifact@v3    
+        uses: actions/download-artifact@v4    
 
       - name: Load Docker image
         run: docker load --input books/image.tar
 
+      - name: Download log artifact
+        uses: action/download-artifact@v4
+        with:
+          name: log
+          path: /tmp
+
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Docker Compose
         run: |
@@ -123,13 +129,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download Docker image and log
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         
       - name: Load Docker image
         run: docker load --input books/image.tar
 
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Docker Compose
         run: docker compose -f docker-compose.yml up -d
@@ -157,7 +163,7 @@ jobs:
         run: python scripts/process_queries.py
 
       - name: Upload query results and log
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: query-response
           path: |
