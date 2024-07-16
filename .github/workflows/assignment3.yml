@@ -57,8 +57,17 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Download log from build
+        uses: actions/download-artifact@v3
+        with:
+          name: log
+          path: log.txt
+          
       - name: Download Docker image and log
         uses: actions/download-artifact@v3
+        with:
+          name: books
+          path: /tmp/image.tar
 
       - name: Load Docker image
         run: docker load --input books/image.tar
