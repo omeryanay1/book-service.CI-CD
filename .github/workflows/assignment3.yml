@@ -62,7 +62,7 @@ jobs:
         with:
           name: log
           path: log.txt
-          
+
       - name: Download Docker image and log
         uses: actions/download-artifact@v3
         with:
@@ -70,7 +70,7 @@ jobs:
           path: /tmp/image.tar
 
       - name: Load Docker image
-        run: docker load --input books/image.tar
+        run: docker load --input books
 
       - name: Checkout repository
         uses: actions/checkout@v3
