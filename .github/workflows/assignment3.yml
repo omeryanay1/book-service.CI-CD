@@ -91,9 +91,11 @@ jobs:
         run: docker ps
 
       - name: Set up Python
+        if: steps.check_status.conclusion == 'success'
         uses: actions/setup-python@v4
     
       - name: Install dependencies
+        if: steps.check_status.conclusion == 'success'
         run: |
           python -m pip install --upgrade pip
           pip install pytest
@@ -101,14 +103,16 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: Run tests
+        if: steps.check_status.conclusion == 'success'
         run: |
           pytest -v ./tests/assn3_tests.py > assn3_test_results.txt
-          
+
       - name: Check pytest status
-        if: success()
+        if: steps.check_status.conclusion == 'success' && success()
         run: echo "tests succeeded" >> /tmp/log.txt
+
       - name: Log pytest failure
-        if: failure()
+        if: steps.check_status.conclusion == 'success' && failure()
         run: echo "tests failed" >> /tmp/log.txt
 
       - name: Upload test results 
