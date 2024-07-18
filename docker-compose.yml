@@ -7,7 +7,6 @@ services:
     restart: always
     networks:
       - backend
-f
   bookapi:
     image: books
     depends_on:
