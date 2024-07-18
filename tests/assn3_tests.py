@@ -21,7 +21,7 @@ ids = []
 def test_post_books_unique_ids(book):
     response = connectionController.http_post("books", book)
     assert_status_code(response, 201)
-    book_id = response.json()
+    book_id = response.json()["ID"]
     assert book_id not in ids, "Duplicate ID found"
     ids.append(book_id)
 
