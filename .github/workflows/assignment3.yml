@@ -82,7 +82,8 @@ jobs:
         run: echo "Container up and running" >> /tmp/log.txt
       - name: Log run failure
         if: failure()
-        run: echo "Container failed to run" >> /tmp/log.txt     
+        run: echo "Container failed to run" >> /tmp/log.txt
+        exit 1
 
 
       - name: Check container status
