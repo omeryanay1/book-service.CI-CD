@@ -1,5 +1,6 @@
 FROM python:3.12.2-slim as base
 WORKDIR ./app
+f
 COPY requirements.txt .
 COPY main.py .
 COPY BooksCollection.py .
