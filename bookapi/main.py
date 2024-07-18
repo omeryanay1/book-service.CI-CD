@@ -56,7 +56,7 @@ class Books(Resource):
 
         ratingsCol.insertRating(rating)
 
-        return id, 201
+        return {"ID": id}, 201
     
     def get(self):
         args = request.args
