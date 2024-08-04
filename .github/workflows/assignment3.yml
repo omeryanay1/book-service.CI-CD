@@ -131,7 +131,7 @@ jobs:
           overwrite: true
             
       - name: Tear down Docker Compose
-        run: docker-compose -f docker-compose.yml down
+        run: docker compose -f docker-compose.yml down
 
   query:
     needs: test
@@ -180,4 +180,4 @@ jobs:
             log.txt
 
       - name: Tear down Docker Compose
-        run: docker-compose -f docker-compose.yml down
+        run: docker compose -f docker-compose.yml down
