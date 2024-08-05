@@ -34,7 +34,7 @@ def test_get_book_by_id():
 # Test 3: Get all books
 def test_get_all_books():
     response = connectionController.http_get("books")
-    assert_status_code(response, 200)
+    assert_status_code(response, 404)
     assert len(response.json()) == 3, "Incorrect number of books returned"
 
 # Test 4: Post invalid book ISBN
